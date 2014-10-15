@@ -38,7 +38,7 @@ EmbedingTrial::c=argv;
 EmbedingTrial emb();
 
     MainWindow w(&listener);
-   // w.show();
+    w.show();
     QObject::connect(&listener,SIGNAL(Update_Image(const QPixmap*)),&w,SLOT(updatePixmap(const QPixmap*)));
     app.connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));    
 
