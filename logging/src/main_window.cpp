@@ -13,7 +13,7 @@
 #include <QMessageBox>
 #include <iostream>
 #include "../include/logging/main_window.hpp"
-
+#include <QDebug>
 /*****************************************************************************
 ** Namespaces
 *****************************************************************************/
@@ -85,6 +85,27 @@ void MainWindow::on_checkbox_use_environment_stateChanged(int state) {
 	//ui.line_edit_topic->setEnabled(enabled);
 }
 
+
+void MainWindow::on_checkBox_stateChanged()
+{
+    qDebug()<<"check box changed value 2"<<endl;
+
+    if ( ui.checkBox->isChecked() )
+    {
+        qDebug()<<"i am checked 3"<<endl;
+        qnode.test(true);
+
+    }
+
+   else {
+        qnode.test(false);
+        }
+
+    qnode.init();
+
+}
+
+
 /*****************************************************************************
 ** Implemenation [Slots][manually connected]
 *****************************************************************************/
@@ -145,9 +166,9 @@ void MainWindow::WriteSettings() {
 }
 
 
-void updateui(const geometry_msgs::Twist::ConstPtr& top)
+void MainWindow::updateui(const geometry_msgs::Twist::ConstPtr& top)
 {
-
+ //ui.label_3
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

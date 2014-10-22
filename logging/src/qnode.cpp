@@ -17,8 +17,9 @@
 #include <sstream>
 #include "../include/logging/qnode.hpp"
 #include <sensor_msgs/Joy.h>
-
-
+#include <QDebug>
+#include <sensor_msgs/Image.h>
+#include <QMutexLocker>
 
 /*****************************************************************************
 ** Namespaces
@@ -33,7 +34,10 @@ namespace logging {
 QNode::QNode(int argc, char** argv ) :
 	init_argc(argc),
 	init_argv(argv)
-	{}
+    {
+
+    check=false;
+}
 
 QNode::~QNode() {
     if(ros::isStarted()) {
@@ -42,21 +46,30 @@ QNode::~QNode() {
     }
 	wait();
 }
-
 bool QNode::init() {
+    qDebug()<<"I am in init 1"<<endl;
 	ros::init(init_argc,init_argv,"logging");
 	if ( ! ros::master::check() ) {
 		return false;
 	}
 	ros::start(); // explicitly needed since our nodehandle is going out of scope.
-	ros::NodeHandle n;
 	// Add your ros communications here.
     //topic = n_.subscribe<geometry_msgs::Twist>("/cmd_vel", 10, &QNode::topiccallback, this);
     //image_sub_ = it_.subscribe("/camera/rgb/image_raw", 1, &Listener::chatterCallback, this);
-    topic= n.subscribe("/camera/rgb/image_raw", 1, &QNode::topiccallback, this);
 
+  //topic= n.subscribe("/camera/rgb/image_raw", 1, &QNode::topiccallback, this);
+    ros::NodeHandle n;
+    pt =&n;
+  // topic= pt->subscribe("/camera/rgb/image_raw", 1, &QNode::topiccallback, this);
 
-	chatter_publisher = n.advertise<std_msgs::String>("chatter", 1000);
+   //qDebug()<<"I just subscribed in init"<<endl;
+
+    //chatter_publisher = n.advertise<std_msgs::String>("chatter", 1000);
+    if (check==true)
+        subscribe_camera();
+    else
+        if(check==false)
+            unSubscribe();
 	start();
 	return true;
 }
@@ -85,10 +98,23 @@ void QNode::run() {
 		std_msgs::String msg;
 		std::stringstream ss;
 		ss << "hello world " << count;
-		msg.data = ss.str();
-		chatter_publisher.publish(msg);
-		log(Info,std::string("I sent: ")+msg.data);
-		ros::spinOnce();
+        msg.data = ss.str();
+        //chatter_publisher.publish(msg);
+        //log(Info,std::string("I sent: ")+msg.data);
+//        mutex.lock();
+
+       /* if (check == true){
+    qDebug()<<"checked is true in run 5"<<endl;
+
+
+}*/
+
+
+//        mutex.unlock();
+
+     //   ros::spinOnce();
+       // subscribe_camera();
+        ros::spin();
 		loop_rate.sleep();
 		++count;
 	}
@@ -98,7 +124,7 @@ void QNode::run() {
 
 
 void QNode::log( const LogLevel &level, const std::string &msg) {
-	logging_model.insertRows(logging_model.rowCount(),1);
+    logging_model.insertRows(logging_model.rowCount(),1);
 	std::stringstream logging_model_msg;
 	switch ( level ) {
 		case(Debug) : {
@@ -108,7 +134,8 @@ void QNode::log( const LogLevel &level, const std::string &msg) {
 		}
 		case(Info) : {
 				ROS_INFO_STREAM(msg);
-				logging_model_msg << "[INFO] [" << ros::Time::now() << "]: " << msg;
+                //logging_model_msg << "[INFO] [" << ros::Time::now() << "]: " << msg;
+                logging_model_msg << "[INFO]:" << msg;
 				break;
 		}
 		case(Warn) : {
@@ -123,7 +150,7 @@ void QNode::log( const LogLevel &level, const std::string &msg) {
 		}
 		case(Fatal) : {
 				ROS_FATAL_STREAM(msg);
-				logging_model_msg << "[FATAL] [" << ros::Time::now() << "]: " << msg;
+                logging_model_msg << "[FATAL] [" << ros::Time::now() << "]: " << msg;
 				break;
 		}
 	}
@@ -132,16 +159,39 @@ void QNode::log( const LogLevel &level, const std::string &msg) {
 	Q_EMIT loggingUpdated(); // used to readjust the scrollbar
 }
 
-void QNode::topiccallback(const geometry_msgs::Twist::ConstPtr& top)
+void QNode::topiccallback(const sensor_msgs::ImageConstPtr& top)
 {
-
-    //updateui(top);
-    std::cout<<top;
-
+    log(Info,std::string("I am currently subscribed to the topic /camera/rgb/image_raw7777"));
+    //qDebug()<<"I am currently subscribed to the topic /camera/rgb/image_raw and receiving data from it"<<endl;
 }
 
 
+void QNode::subscribe_camera()
+{
+    qDebug()<<"I am before the subs 6"<<endl;
+    topic = pt->subscribe("/camera/rgb/image_raw", 1, &QNode::topiccallback, this);
+    qDebug()<<"I am after the subs "<<endl;
 
+}
+void QNode::test(bool en)
+{
+    qDebug()<<"i am in test4"<<endl;
+  //  subscribe_camera();
+//    QMutexLocker lock(&mutex);
+//    mutex.lock();
+      check=en;
+
+//  mutex.unlock();
+
+}
+
+void QNode::unSubscribe()
+{
+    qDebug()<<"i am in unsubscribe"<<endl;
+   // topic=pt->s
+}
 
 
 }  // namespace logging
+
+

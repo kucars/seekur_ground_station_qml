@@ -22,7 +22,8 @@
 #include <QStringListModel>
 #include <sensor_msgs/Joy.h>
 #include <geometry_msgs/Twist.h>
-
+#include <sensor_msgs/Image.h>
+#include <QMutexLocker>
 /*****************************************************************************
 ** Namespaces
 *****************************************************************************/
@@ -42,10 +43,13 @@ public:
 	bool init(const std::string &master_url, const std::string &host_url);
 	void run();
     ros::Subscriber topic;
-    void topiccallback(const geometry_msgs::Twist::ConstPtr& top);
-
-
-
+    void topiccallback(const sensor_msgs::ImageConstPtr& top);
+    ros::NodeHandle *pt;
+    void subscribe_camera();
+    void unSubscribe();
+    void test(bool en);
+    bool check;
+   QMutex mutex;
 	/*********************
 	** Logging
 	**********************/
