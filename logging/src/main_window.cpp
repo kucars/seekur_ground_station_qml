@@ -86,19 +86,41 @@ void MainWindow::on_checkbox_use_environment_stateChanged(int state) {
 }
 
 
-void MainWindow::on_checkBox_stateChanged()
+
+void MainWindow::on_checkBox_stateChanged(int state)
 {
     qDebug()<<"check box changed value 2"<<endl;
 
     if ( ui.checkBox->isChecked() )
     {
         qDebug()<<"i am checked 3"<<endl;
-        qnode.test(true);
+        qnode.test(1);
 
     }
 
    else {
-        qnode.test(false);
+        qnode.test(0);
+        }
+
+    qnode.init();
+
+}
+
+
+
+void MainWindow::on_checkBox_2_stateChanged(int state)
+{
+    qDebug()<<"check box changed value 2"<<endl;
+
+    if ( ui.checkBox_2->isChecked() )
+    {
+        qDebug()<<"i am checked 3"<<endl;
+        qnode.test(3);
+
+    }
+
+   else {
+        qnode.test(2);
         }
 
     qnode.init();

@@ -24,6 +24,7 @@
 #include <geometry_msgs/Twist.h>
 #include <sensor_msgs/Image.h>
 #include <QMutexLocker>
+#include <sensor_msgs/LaserScan.h>
 /*****************************************************************************
 ** Namespaces
 *****************************************************************************/
@@ -43,12 +44,17 @@ public:
 	bool init(const std::string &master_url, const std::string &host_url);
 	void run();
     ros::Subscriber topic;
+    ros::Subscriber topiclaser;
     void topiccallback(const sensor_msgs::ImageConstPtr& top);
+    void lasercallback(const sensor_msgs::LaserScanPtr& top);
+    void unSubscribeLaser();
     ros::NodeHandle *pt;
+    ros::NodeHandle *pt2;
     void subscribe_camera();
+    void subscribe_laser();
     void unSubscribe();
-    void test(bool en);
-    bool check;
+    void test(int en);
+    int check;
    QMutex mutex;
 	/*********************
 	** Logging

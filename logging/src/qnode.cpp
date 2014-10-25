@@ -19,6 +19,7 @@
 #include <sensor_msgs/Joy.h>
 #include <QDebug>
 #include <sensor_msgs/Image.h>
+#include <sensor_msgs/LaserScan.h>
 #include <QMutexLocker>
 
 /*****************************************************************************
@@ -36,7 +37,7 @@ QNode::QNode(int argc, char** argv ) :
 	init_argv(argv)
     {
 
-    check=false;
+    check=-1;
 }
 
 QNode::~QNode() {
@@ -59,17 +60,27 @@ bool QNode::init() {
 
   //topic= n.subscribe("/camera/rgb/image_raw", 1, &QNode::topiccallback, this);
     ros::NodeHandle n;
+    ros::NodeHandle n2;
+    pt2=&n2;
     pt =&n;
+
   // topic= pt->subscribe("/camera/rgb/image_raw", 1, &QNode::topiccallback, this);
 
    //qDebug()<<"I just subscribed in init"<<endl;
 
     //chatter_publisher = n.advertise<std_msgs::String>("chatter", 1000);
-    if (check==true)
+
+    if (check==1)
         subscribe_camera();
     else
-        if(check==false)
+        if(check==0)
             unSubscribe();
+        else
+            if(check==2)
+                unSubscribeLaser();
+            else
+                if(check==3)
+                    subscribe_laser();
 	start();
 	return true;
 }
@@ -161,7 +172,7 @@ void QNode::log( const LogLevel &level, const std::string &msg) {
 
 void QNode::topiccallback(const sensor_msgs::ImageConstPtr& top)
 {
-    log(Info,std::string("I am currently subscribed to the topic /camera/rgb/image_raw7777"));
+    log(Info,std::string("I am currently subscribed to the topic /camera/rgb/image_raw"));
     //qDebug()<<"I am currently subscribed to the topic /camera/rgb/image_raw and receiving data from it"<<endl;
 }
 
@@ -173,7 +184,29 @@ void QNode::subscribe_camera()
     qDebug()<<"I am after the subs "<<endl;
 
 }
-void QNode::test(bool en)
+
+
+void QNode::lasercallback(const sensor_msgs::LaserScanPtr& top)
+{
+    log(Info,std::string("I am currently subscribed to the topic /scan"));
+    //qDebug()<<"I am currently subscribed to the topic /camera/rgb/image_raw and receiving data from it"<<endl;
+}
+
+
+void QNode::subscribe_laser()
+{
+    qDebug()<<"I am before the subs 6"<<endl;
+    topiclaser = pt2->subscribe("/scan", 10, &QNode::lasercallback, this);
+    qDebug()<<"I am after the subs "<<endl;
+
+}
+
+void QNode::unSubscribeLaser()
+{
+    qDebug()<<"i am in unsubscribe"<<endl;
+    topiclaser.shutdown();
+}
+void QNode::test(int en)
 {
     qDebug()<<"i am in test4"<<endl;
   //  subscribe_camera();
@@ -188,7 +221,7 @@ void QNode::test(bool en)
 void QNode::unSubscribe()
 {
     qDebug()<<"i am in unsubscribe"<<endl;
-   // topic=pt->s
+    topic.shutdown();
 }
 
 
