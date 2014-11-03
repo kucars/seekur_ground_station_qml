@@ -117,6 +117,11 @@ qnode.init();
 
 
 void MainWindow::on_button_connect_clicked(bool check ) {
+
+    myfile.open ("../src/logs.txt");
+    myfile << "[ "<<ros::Time::now()<<" ]: "<<"User clicked connect button\n";
+    myfile.close();
+
     qnode.init();
 }
 

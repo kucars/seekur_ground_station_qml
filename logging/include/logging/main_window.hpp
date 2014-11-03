@@ -15,7 +15,8 @@
 #include <QtGui/QMainWindow>
 #include "ui_main_window.h"
 #include "qnode.hpp"
-
+#include <fstream>
+using namespace std;
 /*****************************************************************************
 ** Namespace
 *****************************************************************************/
@@ -36,10 +37,10 @@ public:
 	~MainWindow();
     void updateui(const geometry_msgs::Twist::ConstPtr& top);
 	void ReadSettings(); // Load up qt program settings at startup
-	void WriteSettings(); // Save qt program settings when closing
-
+    void WriteSettings(); // Save qt program settings when closing
 	void closeEvent(QCloseEvent *event); // Overloaded function
-	void showNoMasterMessage();
+    void showNoMasterMessage();
+    ofstream myfile;
 
 public Q_SLOTS:
 	/******************************************
@@ -57,6 +58,11 @@ public Q_SLOTS:
     void on_radioButton_2_toggled();
     void on_radioButton_3_toggled();
     void on_radioButton_4_toggled();
+
+
+
+
+
 
     /******************************************
     ** Manual connections
