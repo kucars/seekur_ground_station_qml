@@ -48,8 +48,15 @@ public Q_SLOTS:
 	void on_actionAbout_triggered();
 	void on_button_connect_clicked(bool check );
 	void on_checkbox_use_environment_stateChanged(int state);
-    void on_checkBox_stateChanged(int state);
-    void on_checkBox_2_stateChanged(int state);
+   // void on_checkBox_stateChanged(int state);
+   // void on_checkBox_2_stateChanged(int state);
+  // void on_pushButton_clicked(bool check );
+   //void on_checkBox_5_stateChanged();
+    //void on_checkBox_6_stateChanged();
+    void on_radioButton_toggled();
+    void on_radioButton_2_toggled();
+    void on_radioButton_3_toggled();
+    void on_radioButton_4_toggled();
 
     /******************************************
     ** Manual connections

@@ -21,6 +21,7 @@
 #include <sensor_msgs/Image.h>
 #include <sensor_msgs/LaserScan.h>
 #include <QMutexLocker>
+#include <geometry_msgs/Twist.h>
 
 /*****************************************************************************
 ** Namespaces
@@ -59,28 +60,51 @@ bool QNode::init() {
     //image_sub_ = it_.subscribe("/camera/rgb/image_raw", 1, &Listener::chatterCallback, this);
 
   //topic= n.subscribe("/camera/rgb/image_raw", 1, &QNode::topiccallback, this);
+
     ros::NodeHandle n;
     ros::NodeHandle n2;
+    ros::NodeHandle n3;
+    ros::NodeHandle n4;
+
     pt2=&n2;
     pt =&n;
+    pt3 = &n3;
+    pt4 =&n4;
+
+
 
   // topic= pt->subscribe("/camera/rgb/image_raw", 1, &QNode::topiccallback, this);
 
    //qDebug()<<"I just subscribed in init"<<endl;
 
-    //chatter_publisher = n.advertise<std_msgs::String>("chatter", 1000);
+ //   chatter_publisher = n.advertise<geometry_msgs::TwistPtr>("/cmd_vel",)
 
-    if (check==1)
+
+    if (check==0)
         subscribe_camera();
     else
-        if(check==0)
+        if(check==1)
             unSubscribe();
         else
-            if(check==2)
+            if(check==3)
                 unSubscribeLaser();
             else
-                if(check==3)
+                if(check==2)
                     subscribe_laser();
+                else
+                   if(check==4)
+                       subscribe_cmd_vel();
+                   else
+                      if(check==5)
+                          unSubscribe_cmd_vel();
+                       else
+                          if(check==6)
+                              subscribe_odom();
+                           else
+                              if(check==7)
+                                  unSubscrib_odom();
+
+
 	start();
 	return true;
 }
@@ -185,11 +209,48 @@ void QNode::subscribe_camera()
 
 }
 
+void QNode::unSubscribe()
+{
+    qDebug()<<"i am in unsubscribe"<<endl;
+    topic.shutdown();
+}
+
+void QNode::odomcallback(const nav_msgs::OdometryPtr& top)
+{
+    log(Info,std::string("I am currently subscribed to the topic /odom"));
+}
+
+void QNode::subscribe_odom()
+{
+
+    topic_odom=pt4->subscribe("/RosAria/pose",1,&QNode::odomcallback,this);
+}
+
+void QNode::unSubscrib_odom()
+{
+    topic_odom.shutdown();
+}
+
+void QNode::cmdvelcallback(const geometry_msgs::TwistPtr& top)
+{
+    log(Info,std::string("I am currently subscribed to the topic /cmd_vel"));
+}
+
+void QNode::subscribe_cmd_vel()
+{
+
+    topic_cmd_vel=pt3->subscribe("/cmd_vel",1,&QNode::cmdvelcallback,this);
+}
+
+void QNode::unSubscribe_cmd_vel()
+{
+    topic_cmd_vel.shutdown();
+}
 
 void QNode::lasercallback(const sensor_msgs::LaserScanPtr& top)
 {
     log(Info,std::string("I am currently subscribed to the topic /scan"));
-    //qDebug()<<"I am currently subscribed to the topic /camera/rgb/image_raw and receiving data from it"<<endl;
+
 }
 
 
@@ -206,23 +267,17 @@ void QNode::unSubscribeLaser()
     qDebug()<<"i am in unsubscribe"<<endl;
     topiclaser.shutdown();
 }
+
+
 void QNode::test(int en)
 {
     qDebug()<<"i am in test4"<<endl;
-  //  subscribe_camera();
-//    QMutexLocker lock(&mutex);
-//    mutex.lock();
       check=en;
-
-//  mutex.unlock();
+      qDebug()<<"check value is "<<check<<"\n";
 
 }
 
-void QNode::unSubscribe()
-{
-    qDebug()<<"i am in unsubscribe"<<endl;
-    topic.shutdown();
-}
+
 
 
 }  // namespace logging

@@ -68,6 +68,54 @@ void MainWindow::showNoMasterMessage() {
  * is already checked or not.
  */
 
+
+
+
+
+
+void MainWindow::on_radioButton_toggled()
+{
+        if(ui.radioButton->isChecked())
+            qnode.test(0);
+        else
+            qnode.test(1);
+
+qnode.init();
+}
+
+
+void MainWindow::on_radioButton_2_toggled()
+{
+        if(ui.radioButton_2->isChecked())
+            qnode.test(2);
+        else
+            qnode.test(3);
+
+qnode.init();
+}
+
+void MainWindow::on_radioButton_3_toggled()
+{
+        if(ui.radioButton_3->isChecked())
+            qnode.test(4);
+        else
+            qnode.test(5);
+        qnode.init();
+
+}
+
+void MainWindow::on_radioButton_4_toggled()
+{
+        if(ui.radioButton_4->isChecked())
+        qnode.test(6);
+        else
+        qnode.test(7);
+qnode.init();
+}
+
+
+
+
 void MainWindow::on_button_connect_clicked(bool check ) {
     qnode.init();
 }
@@ -87,45 +135,44 @@ void MainWindow::on_checkbox_use_environment_stateChanged(int state) {
 
 
 
-void MainWindow::on_checkBox_stateChanged(int state)
-{
-    qDebug()<<"check box changed value 2"<<endl;
+//void MainWindow::on_checkBox_stateChanged(int state)
+//{
+//    qDebug()<<"check box changed value 2"<<endl;
 
-    if ( ui.checkBox->isChecked() )
-    {
-        qDebug()<<"i am checked 3"<<endl;
-        qnode.test(1);
-
-    }
-
-   else {
-        qnode.test(0);
-        }
-
-    qnode.init();
-
-}
+//    if ( ui.checkBox->isChecked() )
+//    {
+//        qDebug()<<"i am checked 3"<<endl;
+//       // qnode.test(1);
 
 
+//    }
 
-void MainWindow::on_checkBox_2_stateChanged(int state)
-{
-    qDebug()<<"check box changed value 2"<<endl;
+//   else {
+//        qnode.test(0);
+//        }
 
-    if ( ui.checkBox_2->isChecked() )
-    {
-        qDebug()<<"i am checked 3"<<endl;
-        qnode.test(3);
+//    qnode.init();
 
-    }
+//}
 
-   else {
-        qnode.test(2);
-        }
+//void MainWindow::on_checkBox_2_stateChanged(int state)
+//{
+//    qDebug()<<"check box changed value 2"<<endl;
 
-    qnode.init();
+//    if ( ui.checkBox_2->isChecked() )
+//    {
+//        qDebug()<<"i am checked 3"<<endl;
+//        qnode.test(3);
 
-}
+//    }
+
+//   else {
+//        qnode.test(2);
+//        }
+
+//    qnode.init();
+
+//}
 
 
 /*****************************************************************************

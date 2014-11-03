@@ -25,6 +25,10 @@
 #include <sensor_msgs/Image.h>
 #include <QMutexLocker>
 #include <sensor_msgs/LaserScan.h>
+#include <geometry_msgs/Twist.h>
+#include <nav_msgs/Odometry.h>
+
+
 /*****************************************************************************
 ** Namespaces
 *****************************************************************************/
@@ -45,14 +49,28 @@ public:
 	void run();
     ros::Subscriber topic;
     ros::Subscriber topiclaser;
+    ros::Subscriber topic_cmd_vel;
+    ros::Subscriber topic_odom;
     void topiccallback(const sensor_msgs::ImageConstPtr& top);
     void lasercallback(const sensor_msgs::LaserScanPtr& top);
-    void unSubscribeLaser();
+    void cmdvelcallback(const geometry_msgs::TwistPtr& top);
+    void odomcallback(const nav_msgs::OdometryPtr& top);
+
+
     ros::NodeHandle *pt;
     ros::NodeHandle *pt2;
+    ros::NodeHandle *pt3;
+    ros::NodeHandle *pt4;
+
     void subscribe_camera();
     void subscribe_laser();
     void unSubscribe();
+    void unSubscribeLaser();
+
+    void subscribe_cmd_vel();
+    void subscribe_odom();
+    void unSubscribe_cmd_vel();
+    void unSubscrib_odom();
     void test(int en);
     int check;
    QMutex mutex;
@@ -73,6 +91,7 @@ public:
 Q_SIGNALS:
 	void loggingUpdated();
     void rosShutdown();
+
 
 private:
 	int init_argc;

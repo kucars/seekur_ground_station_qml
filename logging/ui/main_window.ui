@@ -7,8 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>944</width>
-    <height>704</height>
+    <height>991</height>
    </rect>
+  </property>
+  <property name="acceptDrops">
+   <bool>false</bool>
   </property>
   <property name="windowTitle">
    <string>QRosApp</string>
@@ -89,6 +92,9 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="dock_status">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="sizePolicy">
     <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
      <horstretch>0</horstretch>
@@ -97,9 +103,12 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>325</width>
-     <height>451</height>
+     <width>345</width>
+     <height>944</height>
     </size>
+   </property>
+   <property name="floating">
+    <bool>false</bool>
    </property>
    <property name="allowedAreas">
     <set>Qt::RightDockWidgetArea</set>
@@ -255,16 +264,30 @@
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox">
+         <widget class="QRadioButton" name="radioButton">
           <property name="text">
-           <string>Camera Topic</string>
+           <string>Camera topic</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_2">
+         <widget class="QRadioButton" name="radioButton_2">
           <property name="text">
-           <string>Laser Scan Topic</string>
+           <string>Laser</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_3">
+          <property name="text">
+           <string>cmd vel</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_4">
+          <property name="text">
+           <string>odom</string>
           </property>
          </widget>
         </item>
@@ -354,8 +377,8 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>859</x>
-     <y>552</y>
+     <x>934</x>
+     <y>959</y>
     </hint>
     <hint type="destinationlabel">
      <x>469</x>
