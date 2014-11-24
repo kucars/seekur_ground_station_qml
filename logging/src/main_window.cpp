@@ -75,8 +75,19 @@ void MainWindow::showNoMasterMessage() {
 
 void MainWindow::on_radioButton_toggled()
 {
+    QDateTime current = QDateTime::currentDateTime();
+    QString time = current.toString("yyyy-MM-dd hh:mm:ss");
+
+
+
+
+    qDebug()<<"radio 1 toggled\n";
         if(ui.radioButton->isChecked())
+        {
+            myfile <<time.toStdString()<<": User chose camera topic\n"<<endl;
             qnode.test(0);
+        }
+
         else
             qnode.test(1);
 
@@ -86,8 +97,14 @@ qnode.init();
 
 void MainWindow::on_radioButton_2_toggled()
 {
+
+    QDateTime current = QDateTime::currentDateTime();
+    QString time = current.toString("yyyy-MM-dd hh:mm:ss");
         if(ui.radioButton_2->isChecked())
+        {
+            myfile <<time.toStdString()<<": User choose laser /scan topic\n"<<endl;
             qnode.test(2);
+        }
         else
             qnode.test(3);
 
@@ -96,8 +113,14 @@ qnode.init();
 
 void MainWindow::on_radioButton_3_toggled()
 {
+    QDateTime current = QDateTime::currentDateTime();
+    QString time = current.toString("yyyy-MM-dd hh:mm:ss");
+
         if(ui.radioButton_3->isChecked())
+        {
+            myfile <<time.toStdString()<<": User choose velocity command topic\n"<<endl;
             qnode.test(4);
+        }
         else
             qnode.test(5);
         qnode.init();
@@ -106,8 +129,15 @@ void MainWindow::on_radioButton_3_toggled()
 
 void MainWindow::on_radioButton_4_toggled()
 {
+
+    QDateTime current = QDateTime::currentDateTime();
+    QString time = current.toString("yyyy-MM-dd hh:mm:ss");
+
         if(ui.radioButton_4->isChecked())
+        {
         qnode.test(6);
+        myfile <<time.toStdString()<<": User User chose odom topic\n"<<endl;
+        }
         else
         qnode.test(7);
 qnode.init();
@@ -118,10 +148,13 @@ qnode.init();
 
 void MainWindow::on_button_connect_clicked(bool check ) {
 
-    myfile.open ("../src/logs.txt");
-    myfile << "[ "<<ros::Time::now()<<" ]: "<<"User clicked connect button\n";
-    myfile.close();
+     QDateTime current = QDateTime::currentDateTime();
+     QString time = current.toString("yyyy-MM-dd hh:mm:ss");
 
+
+    myfile.open ("/home/kurisdp/catkin_ws/src/logging/src/logs.txt");
+    myfile <<time.toStdString()<<": User clicked connect button"<<endl;
+   // myfile.close();
     qnode.init();
 }
 
@@ -247,6 +280,7 @@ void MainWindow::updateui(const geometry_msgs::Twist::ConstPtr& top)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    myfile.close();
 	WriteSettings();
 	QMainWindow::closeEvent(event);
 }

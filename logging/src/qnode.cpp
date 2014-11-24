@@ -196,6 +196,7 @@ void QNode::log( const LogLevel &level, const std::string &msg) {
 
 void QNode::topiccallback(const sensor_msgs::ImageConstPtr& top)
 {
+    qDebug()<<"I sm in camera callback\n";
     log(Info,std::string("I am currently subscribed to the topic /camera/rgb/image_raw"));
     //qDebug()<<"I am currently subscribed to the topic /camera/rgb/image_raw and receiving data from it"<<endl;
 }
@@ -203,9 +204,9 @@ void QNode::topiccallback(const sensor_msgs::ImageConstPtr& top)
 
 void QNode::subscribe_camera()
 {
-    qDebug()<<"I am before the subs 6"<<endl;
+    qDebug()<<"I am before the subs 666"<<endl;
     topic = pt->subscribe("/camera/rgb/image_raw", 1, &QNode::topiccallback, this);
-    qDebug()<<"I am after the subs "<<endl;
+    qDebug()<<"I am after the subs 777"<<endl;
 
 }
 

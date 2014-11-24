@@ -1,0 +1,11 @@
+2014-11-05 12:48:15: User clicked connect button
+2014-11-05 12:48:17: User choose velocity command topic
+
+2014-11-05 12:48:17: User chose camera topic
+
+2014-11-05 12:48:35: User choose velocity command topic
+
+2014-11-05 12:48:37: User User chose odom topic
+
+2014-11-05 12:48:37: User chose camera topic
+
