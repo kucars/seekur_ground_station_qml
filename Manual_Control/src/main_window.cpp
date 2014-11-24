@@ -193,85 +193,118 @@ void MainWindow::on_button_connect_clicked(bool check ) {
 }
 
 //arm
-void MainWindow::on_radioButton_toggled()
+void MainWindow::on_checkBox_toggled()
 {
-        if(ui.radioButton->isChecked())
+        if(ui.checkBox->isChecked())
         {
-            qnode.test(0);
-            current_view=0;
+            ui.checkBox_2->setChecked(false);
+
+
+            ui.radiojoint->setEnabled(false);
+            ui.radiojoint_2->setEnabled(false);
+            ui.radiojoint_3->setEnabled(false);
+            ui.radiojoint_4->setEnabled(false);
+            ui.radiojoint_5->setEnabled(false);
+            ui.gripper->setEnabled(false);
+            ui.grasp_position->setEnabled(false);
+
+            qnode.test(1);
+            current_view=1;
+
         }
 
-//        else
-//       }     qnode.test(2);
+        else
+           qnode.test(3);
 
 qnode.init();
 }
 
 
-void MainWindow::on_radioButton_2_toggled()
+void MainWindow::on_checkBox_2_toggled()
 {
-        if(ui.radioButton_2->isChecked())
+        if(ui.checkBox_2->isChecked())
         {
-            qnode.test(1);
-            current_view=1;
+            ui.checkBox->setChecked(false);
+             qnode.test(0);
+            current_view=0;
+            ui.radiojoint->setEnabled(true);
+            ui.radiojoint_2->setEnabled(true);
+            ui.radiojoint_3->setEnabled(true);
+            ui.radiojoint_4->setEnabled(true);
+            ui.radiojoint_5->setEnabled(true);
+            ui.gripper->setEnabled(true);
+            ui.grasp_position->setEnabled(true);
+
+
          }
 
-//        else
-//            qnode.test(3);
+       else{
 
+        qnode.test(2);
+
+        }
 qnode.init();
 }
 
 
 
 void MainWindow::radioButton_setjoint() {
+    if (ui.radiojoint->isEnabled()){
+
     if(ui.radiojoint->isChecked())
     {
         qnode.setJoint("j1");
     }
-}
+}}
 void MainWindow::radioButton_2_setjoint() {
+    if (ui.radiojoint_2->isEnabled()){
 
     if(ui.radiojoint_2->isChecked())
     {
         qDebug()<<"IN radioButton_2_setjoint()";
         qnode.setJoint("j2");
-    }
+    }}
 }
 void MainWindow::radioButton_3_setjoint() {
+    if (ui.radiojoint_3->isEnabled()){
 
     if(ui.radiojoint_3->isChecked())
     {
         qnode.setJoint("j3");
     }
-}
+}}
 void MainWindow::radioButton_4_setjoint() {
+    if (ui.radiojoint_4->isEnabled()){
+
     if(ui.radiojoint_4->isChecked())
     {
         qnode.setJoint("j4");
     }
-}
+}}
 void MainWindow::radioButton_5_setjoint() {
-
+    if (ui.radiojoint_5->isEnabled()){
     if(ui.radiojoint_5->isChecked())
     {
         qnode.setJoint("j5");
     }}
+}
 
 void MainWindow::setGripper() {
+    if (ui.gripper->isEnabled()){
 
     if(ui.gripper->isChecked())
     {
         qnode.setJoint("g");
-    }}
+    }}}
 
 void MainWindow::setGrasp() {
+    if (ui.grasp_position->isEnabled()){
 
     if(ui.grasp_position->isChecked())
     {
         qnode.setJoint("grasp");
     }}
-
+}
 void MainWindow::on_quit_button_clicked()
 {
     qnode.stopRobot();

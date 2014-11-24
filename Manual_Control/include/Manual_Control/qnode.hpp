@@ -67,7 +67,7 @@ public:
         void keyPressed(int keyId);
         sensor_msgs::JointState j;
 /*************************************************/
-        ros::Publisher pub_2;
+        ros::Publisher pub2;
         void test(int en);
         int check;
         double speed();
@@ -78,7 +78,8 @@ public:
         QString joint;
         double i[5];
     //    ros::NodeHandle n_;
-          ros::Publisher pub_;
+          ros::Publisher pub;
+
        // ros::Subscriber joy_sub_;
         int keyId;
         //void joyCallback(const sensor_msgs::Joy::ConstPtr& joy);

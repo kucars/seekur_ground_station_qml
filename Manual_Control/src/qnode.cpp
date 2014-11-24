@@ -19,6 +19,7 @@
 #include <sstream>
 #include "../include/Manual_Control/qnode.hpp"
 #include <sensor_msgs/JointState.h>
+#include <geometry_msgs/Twist.h>
 #include<string.h>
 
 /*****************************************************************************
@@ -71,19 +72,36 @@ bool QNode::init() {
   ros::NodeHandle n_;
   ros::NodeHandle n2;
 
-
+  qDebug()<<"i am now check for check value"<<endl;
   if (check==0)
   {
-      pub_ = n_.advertise<sensor_msgs::JointState>("/joint_states",1);
+       qDebug()<<"i am now check for check value... is 0"<<endl;
+      pub = n_.advertise<sensor_msgs::JointState>("/joint_states",1);
   }
 
   else
       if(check==1)
       {
-          pub_2 = n2.advertise<geometry_msgs::Twist>("/RosAria/cmd_vel",1);
+           qDebug()<<"i am now check for check value...is 1"<<endl;
+          pub2 = n2.advertise<geometry_msgs::Twist>("/RosAria/cmd_vel",1);
       }
 
+    else
 
+   if(check==2)
+   {
+        qDebug()<<"i am now check for check value.. is 2"<<endl;
+       //pub.shutdown();
+   }
+
+    else
+
+   if(check==3)
+     {
+     qDebug()<<"i am now check for check value..is 3"<<endl;
+     //pub2.shutdown();
+
+      }
 
   chatter_publisher = n_.advertise<std_msgs::String>("chatter", 1000);
    start();
@@ -112,11 +130,12 @@ void QNode::run()
 {
 
     if (check==0){
+         qDebug()<<"i am now check for check value in run ..is 0"<<endl;
     ros::Rate loop_rate(10);
     int selectedjoint;
     // double i[5]={0,-40,-90,-40,0};
     i[0]=0;
-    i[1]=-40;
+    i[1]=-30;
     i[2]=-90;
     i[3]=-40;
     i[4]= 0;
@@ -191,7 +210,7 @@ void QNode::run()
                 {
                     j.name.push_back(name.toStdString());
                     j.position.push_back(0);
-                    pub_.publish(j);
+                    pub.publish(j);
                 }
 
                 else
@@ -199,28 +218,30 @@ void QNode::run()
                 j.name.push_back(name.toStdString());
                 i[selectedjoint] = jointPose+10;
                 j.position.push_back(i[selectedjoint]);
-                pub_.publish(j);
+                pub.publish(j);
                 }
                 break;
             case DOWN:
                 if(name == QString("g"))
                 {
+                     qDebug()<<"i am now in case down before before publishing"<<endl;
                     j.name.push_back(name.toStdString());
                     j.position.push_back(1);
-                    pub_.publish(j);
+                    pub.publish(j);
+                     qDebug()<<"i am now in case down after publishing"<<endl;
                 }
                 else if(name == QString("grasp"))
                 {
                     j.name.push_back(name.toStdString());
                     j.position.push_back(1);
-                    pub_.publish(j);
+                    pub.publish(j);
                 }
                 else
                 {
                 j.name.push_back(name.toStdString());
                 i[selectedjoint] = jointPose-10;
                 j.position.push_back(i[selectedjoint]);
-                pub_.publish(j);
+                pub.publish(j);
                 }
 
                 break;
@@ -323,7 +344,7 @@ void QNode::run()
                     default:
                         qDebug()<<"unknown key";
                     }
-                    pub_.publish(cmdvel);
+                    pub2.publish(cmdvel);
 
                 std_msgs::String msg;
                  chatter_publisher.publish(msg);
@@ -404,6 +425,6 @@ void QNode::setJoint(QString j)
 void QNode::stopRobot()
 {
     cmdvel.linear.x = cmdvel.angular.z = 0.0;
-    pub_.publish(cmdvel);
+    pub2.publish(cmdvel);
 }
 }  // namespace Manual_Control
