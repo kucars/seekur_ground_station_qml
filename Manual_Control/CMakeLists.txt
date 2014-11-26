@@ -42,6 +42,8 @@ QT4_WRAP_CPP(QT_MOC_HPP ${QT_MOC})
 QT4_WRAP_CPP(QT_MOC_HPP
     include/Manual_Control/main_window.hpp
     include/Manual_Control/qnode.hpp
+    include/Manual_Control/qnode2.hpp
+
 ${QT_MOC})
 
 ##############################################################################
@@ -53,6 +55,7 @@ set(SOURCE_FILES
   src/main.cpp
   src/main_window.cpp
   src/qnode.cpp
+  src/qnode2.cpp
   ${MOC_FILES}
 )
 

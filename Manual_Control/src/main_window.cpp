@@ -17,6 +17,7 @@
 #include <QRadioButton>
 #include <QDebug>
 #include "../include/Manual_Control/qnode.hpp"
+#include "../include/Manual_Control/qnode2.hpp"
 #include <string.h>
 
 /*****************************************************************************
@@ -139,7 +140,7 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
 }
 
 MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
-    : QMainWindow(parent), qnode(argc,argv)
+    : QMainWindow(parent), qnode(argc,argv), qnode_2(argc,argv)
 {
     ui.setupUi(this); // Calling this incidentally connects all ui's triggers to on_...() callbacks in this class creates user interface.
     QObject::connect(ui.actionAbout_Qt, SIGNAL(triggered(bool)), qApp, SLOT(aboutQt())); // qApp is a global variable for the application
@@ -156,15 +157,17 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
 
 
     this->setFocusPolicy(Qt::StrongFocus);
-    ReadSettings();
+//    ReadSettings();
     setWindowIcon(QIcon(":/images/icon.png"));
     ui.tab_manager->setCurrentIndex(0); // ensure the first tab is showing - qt-designer should have this already hardwired, but often loses it (settings?).
     QObject::connect(&qnode, SIGNAL(rosShutdown()), this, SLOT(close()));
 
 
-    //ui.view_logging->setModel(qnode.loggingModel());
-    //QObject::connect(&qnode, SIGNAL(loggingUpdated()), this, SLOT(updateLoggingView()));
+    ui.view_logging->setModel(qnode.loggingModel());
+    QObject::connect(&qnode, SIGNAL(loggingUpdated()), this, SLOT(updateLoggingView()));
 
+    ui.view_logging_2->setModel(qnode_2.loggingModel());
+    QObject::connect(&qnode_2, SIGNAL(loggingUpdated2()), this, SLOT(updateLoggingView2()));
 
 
 }
@@ -305,20 +308,80 @@ void MainWindow::setGrasp() {
         qnode.setJoint("grasp");
     }}
 }
-void MainWindow::on_quit_button_clicked()
+
+
+
+
+
+void MainWindow::on_radioButton_toggled()
 {
-    qnode.stopRobot();
+    QDateTime current = QDateTime::currentDateTime();
+    QString time = current.toString("yyyy-MM-dd hh:mm:ss");
+
+
+
+
+    qDebug()<<"radio 1 toggled\n";
+        if(ui.radioButton->isChecked())
+        {
+            myfile <<time.toStdString()<<": User chose camera topic\n"<<endl;
+            qnode_2.test(0);
+
+        }
+
+        else
+            qnode_2.test(1);
+
+qnode_2.init();
 }
 
-void MainWindow::on_checkbox_use_environment_stateChanged(int state) {
-    bool enabled;
-    if ( state == 0 ) {
-        enabled = true;
-    } else {
-        enabled = false;
-    }
-    ui.line_edit_master->setEnabled(enabled);
-    ui.line_edit_host->setEnabled(enabled);
+
+void MainWindow::on_radioButton_2_toggled()
+{
+
+    QDateTime current = QDateTime::currentDateTime();
+    QString time = current.toString("yyyy-MM-dd hh:mm:ss");
+        if(ui.radioButton_2->isChecked())
+        {
+            myfile <<time.toStdString()<<": User choose laser /scan topic\n"<<endl;
+            qnode_2.test(2);
+        }
+        else
+            qnode_2.test(3);
+
+qnode_2.init();
+}
+
+void MainWindow::on_radioButton_3_toggled()
+{
+    QDateTime current = QDateTime::currentDateTime();
+    QString time = current.toString("yyyy-MM-dd hh:mm:ss");
+
+        if(ui.radioButton_3->isChecked())
+        {
+            myfile <<time.toStdString()<<": User choose velocity command topic\n"<<endl;
+            qnode_2.test(4);
+        }
+        else
+            qnode_2.test(5);
+        qnode_2.init();
+
+}
+
+void MainWindow::on_radioButton_4_toggled()
+{
+
+    QDateTime current = QDateTime::currentDateTime();
+    QString time = current.toString("yyyy-MM-dd hh:mm:ss");
+
+        if(ui.radioButton_4->isChecked())
+        {
+        qnode_2.test(6);
+        myfile <<time.toStdString()<<": User User chose odom topic\n"<<endl;
+        }
+        else
+        qnode_2.test(7);
+qnode_2.init();
 }
 
 /*****************************************************************************
@@ -330,10 +393,12 @@ void MainWindow::on_checkbox_use_environment_stateChanged(int state) {
  * this will drop the cursor down to the last line in the QListview to ensure
  * the user can always see the latest log message.
  */
-/*void MainWindow::updateLoggingView() {
+void MainWindow::updateLoggingView() {
         ui.view_logging->scrollToBottom();
-}*/
-
+}
+void MainWindow::updateLoggingView2() {
+        ui.view_logging_2->scrollToBottom();
+}
 /*****************************************************************************
 ** Implementation [Menu]
 *****************************************************************************/
@@ -346,42 +411,10 @@ void MainWindow::on_actionAbout_triggered() {
 ** Implementation [Configuration]
 *****************************************************************************/
 
-void MainWindow::ReadSettings() {
-    QSettings settings("Qt-Ros Package", "Manual_Control");
-    restoreGeometry(settings.value("geometry").toByteArray());
-    restoreState(settings.value("windowState").toByteArray());
-    QString master_url = settings.value("master_url",QString("http://192.168.1.2:11311/")).toString();
-    QString host_url = settings.value("host_url", QString("192.168.1.3")).toString();
-    //QString topic_name = settings.value("topic_name", QString("/chatter")).toString();
-    ui.line_edit_master->setText(master_url);
-    ui.line_edit_host->setText(host_url);
-    //ui.line_edit_topic->setText(topic_name);
-    bool remember = settings.value("remember_settings", false).toBool();
-    ui.checkbox_remember_settings->setChecked(remember);
-    bool checked = settings.value("use_environment_variables", false).toBool();
-    ui.checkbox_use_environment->setChecked(checked);
-    if ( checked ) {
-        ui.line_edit_master->setEnabled(false);
-        ui.line_edit_host->setEnabled(false);
-        //ui.line_edit_topic->setEnabled(false);
-    }
-}
-
-void MainWindow::WriteSettings() {
-    QSettings settings("Qt-Ros Package", "Manual_Control");
-    settings.setValue("master_url",ui.line_edit_master->text());
-    settings.setValue("host_url",ui.line_edit_host->text());
-    //settings.setValue("topic_name",ui.line_edit_topic->text());
-    settings.setValue("use_environment_variables",QVariant(ui.checkbox_use_environment->isChecked()));
-    settings.setValue("geometry", saveGeometry());
-    settings.setValue("windowState", saveState());
-    settings.setValue("remember_settings",QVariant(ui.checkbox_remember_settings->isChecked()));
-
-}
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    WriteSettings();
+   // WriteSettings();
     QMainWindow::closeEvent(event);
 }
 
