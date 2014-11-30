@@ -19,6 +19,7 @@
 #include "ui_main_window.h"
 #include "qnode.hpp"
 #include "qnode2.hpp"
+#include "qnode3.hpp"
 #include <string.h>
 #include <fstream>
 #include <ostream>
@@ -42,11 +43,12 @@ Q_OBJECT
 public:
     ofstream myfile;
 
-    MainWindow(int argc, char** argv, QWidget *parent = 0);
+    MainWindow(int argc, char** argv, QNode3 *node, QWidget *parent = 0);
     ~MainWindow();
 
     QNode qnode;
     qnode2 qnode_2;
+    QNode3 *qnode_3;
 
 
     void closeEvent(QCloseEvent *event); // Overloaded function
@@ -100,6 +102,9 @@ public Q_SLOTS:
     *******************************************/
     void updateLoggingView(); // no idea why this can't connect automatically
     void updateLoggingView2();
+    void updateLoggingView3();
+    void updatePixmap(const QPixmap* image);
+
 private:
     Ui::MainWindowDesign ui;
 };

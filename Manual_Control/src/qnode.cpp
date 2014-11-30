@@ -71,39 +71,37 @@ bool QNode::init() {
   ros::start(); // explicitly needed since our nodehandle is going out of scope.
   ros::NodeHandle n_;
   ros::NodeHandle n2;
+  qDebug()<<"i am now checking for check value"<<endl;
 
-  qDebug()<<"i am now check for check value"<<endl;
+
   if (check==0)
   {
-       qDebug()<<"i am now check for check value... is 0"<<endl;
+       qDebug()<<"check value... is 0"<<endl;
       pub = n_.advertise<sensor_msgs::JointState>("/joint_states",1);
   }
 
   else
       if(check==1)
       {
-           qDebug()<<"i am now check for check value...is 1"<<endl;
-          pub2 = n2.advertise<geometry_msgs::Twist>("/RosAria/cmd_vel",1);
+            qDebug()<<"check value...is 1"<<endl;
+            pub2 = n2.advertise<geometry_msgs::Twist>("/RosAria/cmd_vel",1);
       }
 
-    else
-
-   if(check==2)
+      else if(check==2)
    {
-        qDebug()<<"i am now check for check value.. is 2"<<endl;
-       //pub.shutdown();
+        qDebug()<<"check value.. is 2"<<endl;
+        pub.shutdown();
    }
 
-    else
-
-   if(check==3)
+    else if(check==3)
      {
-     qDebug()<<"i am now check for check value..is 3"<<endl;
-     //pub2.shutdown();
+     qDebug()<<" check value..is 3"<<endl;
+     pub2.shutdown();
+     qDebug()<<" check value..is 3 after"<<endl;
 
       }
 
-  chatter_publisher = n_.advertise<std_msgs::String>("chatter", 1000);
+   chatter_publisher = n_.advertise<std_msgs::String>("chatter", 1000);
    start();
     return true;
 }
@@ -119,7 +117,7 @@ void QNode::keyPressed(int keyId)
 
 void QNode::test(int en)
 {
-    qDebug()<<"i am in test4"<<endl;
+      qDebug()<<"i am in test4"<<endl;
       check=en;
       qDebug()<<"check value is "<<check<<"\n";
 
@@ -130,7 +128,7 @@ void QNode::run()
 {
 
     if (check==0){
-         qDebug()<<"i am now check for check value in run ..is 0"<<endl;
+         qDebug()<<" check in run ..is 0"<<endl;
     ros::Rate loop_rate(10);
     int selectedjoint;
     // double i[5]={0,-40,-90,-40,0};
@@ -141,7 +139,7 @@ void QNode::run()
     i[4]= 0;
     double k = 0;
 
-    while(ros::ok() /*&& pub_*/)
+    while(ros::ok() && check==0/*&& pub_*/)
     {
         QString name ;
         if(isKeyPressed)
@@ -267,7 +265,7 @@ void QNode::run()
             ros::spinOnce();
             int scalingfactor = 1;
             double x = 0.1;
-            while(ros::ok() /*&& pub_*/)
+            while(ros::ok() && check==1/*&& pub_*/)
             {
                if(isKeyPressed)
                 {

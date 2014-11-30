@@ -10,13 +10,13 @@ project(Manual_Control)
 ##############################################################################
 
 # qt_build provides the qt cmake glue, roscpp the comms for a default talker
-find_package(catkin REQUIRED COMPONENTS qt_build roscpp)
+find_package(catkin REQUIRED COMPONENTS rviz qt_build roscpp image_transport cv_bridge)
 include_directories(${catkin_INCLUDE_DIRS})
 # Use this to define what the package will export (e.g. libs, headers).
 # Since the default here is to produce only a binary, we don't worry about
 # exporting anything. 
 catkin_package()
-
+add_definitions(-DQT_NO_KEYWORDS)
 ##############################################################################
 # Qt Environment
 ##############################################################################
@@ -43,7 +43,9 @@ QT4_WRAP_CPP(QT_MOC_HPP
     include/Manual_Control/main_window.hpp
     include/Manual_Control/qnode.hpp
     include/Manual_Control/qnode2.hpp
-
+    include/Manual_Control/myviz.h
+    include/Manual_Control/qnode3.hpp
+    include/Manual_Control/listener.hpp
 ${QT_MOC})
 
 ##############################################################################
@@ -56,6 +58,9 @@ set(SOURCE_FILES
   src/main_window.cpp
   src/qnode.cpp
   src/qnode2.cpp
+  src/myviz.cpp
+  src/qnode3.cpp
+  src/listener.cpp
   ${MOC_FILES}
 )
 

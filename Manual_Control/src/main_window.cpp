@@ -19,6 +19,7 @@
 #include "../include/Manual_Control/qnode.hpp"
 #include "../include/Manual_Control/qnode2.hpp"
 #include <string.h>
+#include"../include/Manual_Control/myviz.h"
 
 /*****************************************************************************
 ** Namespaces
@@ -139,9 +140,13 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
 
 }
 
-MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
-    : QMainWindow(parent), qnode(argc,argv), qnode_2(argc,argv)
+MainWindow::MainWindow(int argc, char** argv, QNode3 *node, QWidget *parent)
+    : QMainWindow(parent), qnode(argc,argv), qnode_2(argc,argv), qnode_3(node)
 {
+
+    MyViz* m= new MyViz (argc, argv);
+
+    //m->show();
     ui.setupUi(this); // Calling this incidentally connects all ui's triggers to on_...() callbacks in this class creates user interface.
     QObject::connect(ui.actionAbout_Qt, SIGNAL(triggered(bool)), qApp, SLOT(aboutQt())); // qApp is a global variable for the application
 
@@ -160,7 +165,12 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
 //    ReadSettings();
     setWindowIcon(QIcon(":/images/icon.png"));
     ui.tab_manager->setCurrentIndex(0); // ensure the first tab is showing - qt-designer should have this already hardwired, but often loses it (settings?).
+    setWindowTitle(QApplication::translate("MainWindowDesign", qnode_3->nodeName().c_str(), 0));
+
+
     QObject::connect(&qnode, SIGNAL(rosShutdown()), this, SLOT(close()));
+
+    ui.tab_2->setLayout(m->layout());
 
 
     ui.view_logging->setModel(qnode.loggingModel());
@@ -169,6 +179,9 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
     ui.view_logging_2->setModel(qnode_2.loggingModel());
     QObject::connect(&qnode_2, SIGNAL(loggingUpdated2()), this, SLOT(updateLoggingView2()));
 
+    ui.view_logging_3->setModel(qnode_3->loggingModel());
+    QObject::connect(qnode_3, SIGNAL(loggingUpdated3()), this, SLOT(updateLoggingView3()));
+    ui.lbimage->setPixmap(qnode_3->PixmapModel());
 
 }
 
@@ -200,16 +213,18 @@ void MainWindow::on_checkBox_toggled()
 {
         if(ui.checkBox->isChecked())
         {
+            if(ui.checkBox_2->isChecked())
+            {
             ui.checkBox_2->setChecked(false);
+            }
 
-
-            ui.radiojoint->setEnabled(false);
-            ui.radiojoint_2->setEnabled(false);
-            ui.radiojoint_3->setEnabled(false);
-            ui.radiojoint_4->setEnabled(false);
-            ui.radiojoint_5->setEnabled(false);
-            ui.gripper->setEnabled(false);
-            ui.grasp_position->setEnabled(false);
+//            ui.radiojoint->setEnabled(false);
+//            ui.radiojoint_2->setEnabled(false);
+//            ui.radiojoint_3->setEnabled(false);
+//            ui.radiojoint_4->setEnabled(false);
+//            ui.radiojoint_5->setEnabled(false);
+//            ui.gripper->setEnabled(false);
+//            ui.grasp_position->setEnabled(false);
 
             qnode.test(1);
             current_view=1;
@@ -227,16 +242,20 @@ void MainWindow::on_checkBox_2_toggled()
 {
         if(ui.checkBox_2->isChecked())
         {
+            if(ui.checkBox->isChecked())
+            {
             ui.checkBox->setChecked(false);
+            }
+
              qnode.test(0);
             current_view=0;
-            ui.radiojoint->setEnabled(true);
-            ui.radiojoint_2->setEnabled(true);
-            ui.radiojoint_3->setEnabled(true);
-            ui.radiojoint_4->setEnabled(true);
-            ui.radiojoint_5->setEnabled(true);
-            ui.gripper->setEnabled(true);
-            ui.grasp_position->setEnabled(true);
+//            ui.radiojoint->setEnabled(true);
+//            ui.radiojoint_2->setEnabled(true);
+//            ui.radiojoint_3->setEnabled(true);
+//            ui.radiojoint_4->setEnabled(true);
+//            ui.radiojoint_5->setEnabled(true);
+//            ui.gripper->setEnabled(true);
+//            ui.grasp_position->setEnabled(true);
 
 
          }
@@ -399,6 +418,11 @@ void MainWindow::updateLoggingView() {
 void MainWindow::updateLoggingView2() {
         ui.view_logging_2->scrollToBottom();
 }
+
+void MainWindow::updateLoggingView3() {
+        ui.view_logging_3->scrollToBottom();
+}
+
 /*****************************************************************************
 ** Implementation [Menu]
 *****************************************************************************/
@@ -417,5 +441,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
    // WriteSettings();
     QMainWindow::closeEvent(event);
 }
+
+void Manual_Control::MainWindow::updatePixmap(const QPixmap* image)
+{
+    ui.lbimage->setPixmap(*image);
+
+}
+
 
 }  // namespace Manual_Control
