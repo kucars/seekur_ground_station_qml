@@ -183,6 +183,7 @@ MainWindow::MainWindow(int argc, char** argv, QNode3 *node, QWidget *parent)
     QObject::connect(qnode_3, SIGNAL(loggingUpdated3()), this, SLOT(updateLoggingView3()));
     ui.lbimage->setPixmap(qnode_3->PixmapModel());
 
+    qnode_3->on_init();
 }
 
 MainWindow::~MainWindow() {}
