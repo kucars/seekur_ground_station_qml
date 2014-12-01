@@ -138,6 +138,7 @@ void QNode::run()
     i[3]=-40;
     i[4]= 0;
     double k = 0;
+    QString grip_status;
 
     while(ros::ok() && check==0/*&& pub_*/)
     {
@@ -206,6 +207,7 @@ void QNode::run()
             case UP:
                 if(name == QString("g"))
                 {
+                    grip_status = "open";
                     j.name.push_back(name.toStdString());
                     j.position.push_back(0);
                     pub.publish(j);
@@ -222,6 +224,8 @@ void QNode::run()
             case DOWN:
                 if(name == QString("g"))
                 {
+                    grip_status = "closed";
+
                      qDebug()<<"i am now in case down before before publishing"<<endl;
                     j.name.push_back(name.toStdString());
                     j.position.push_back(1);
@@ -245,8 +249,24 @@ void QNode::run()
                 break;
 
             }
+
+            QString stringjoint = "joint 1 \t joint 2 \t joint 3 \t joint 4 \t joint 5 \t Gripper\n";
+                        QString string1 = "";
+
+                        for (int k=0;k<5;k++)
+                         {
+                             string1 = string1+QString::number(i[k])+"\t";//qt visualizers seen view //radio checks//regidtry q settings
+                         }
+
+                       // log(Info,std::string("Linear velocity:  "+j1.toStdString()));
+                        string1 = string1 + grip_status;
+                        log(Info,std::string(stringjoint.toStdString()+string1.toStdString()));
+
+
             qDebug()<<"Size of j:"<<j.name.size();
         }
+
+
         std_msgs::String msg;
         chatter_publisher.publish(msg);
         j.name.clear();
@@ -342,6 +362,13 @@ void QNode::run()
                     default:
                         qDebug()<<"unknown key";
                     }
+
+                    QString m= QString::number(cmdvel.linear.x);
+                    QString z= QString::number(cmdvel.angular.z);
+
+                    log(Info,std::string("Linear velocity:  "+m.toStdString()+"\nAngular velocity:  "
+                                         +z.toStdString()));
+
                     pub2.publish(cmdvel);
 
                 std_msgs::String msg;

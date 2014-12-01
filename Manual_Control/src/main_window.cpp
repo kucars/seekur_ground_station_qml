@@ -123,14 +123,14 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
              }
          }
 
-             double num = qnode.speed();
-              QString m= QString::number(num);
-              QString n="The linear velocity is: ";
-              QString o = "\n";
-              QString p = "The anguler velocity is: ";
-              double num2 = qnode.speed2();
-              QString f= QString::number(num2);
-              ui.label_4->setText(n+m+o+p+f);
+//             double num = qnode.speed();
+//              QString m= QString::number(num);
+//              QString n="The linear velocity is: ";
+//              QString o = "\n";
+//              QString p = "The anguler velocity is: ";
+//              double num2 = qnode.speed2();
+//              QString f= QString::number(num2);
+//              ui.label_4->setText(n+m+o+p+f);
 
         }
 
